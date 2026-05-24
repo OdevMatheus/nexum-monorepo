@@ -41,6 +41,7 @@ jobs:
         working-directory: ./backend
         env:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
         run: |
           chmod +x mvnw
           ./mvnw clean verify
