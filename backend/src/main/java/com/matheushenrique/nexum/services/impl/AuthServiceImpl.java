@@ -30,8 +30,21 @@ public class AuthServiceImpl {
 
     @Transactional
     public MessageResponse register(RegisterRequest request) {
-        if (userRepository.existsByEmail(request.email())) {
-            throw new EmailAlreadyInUseException("Email already registered");
+        var existingUser = userRepository.findByEmail(request.email());
+
+        if (existingUser.isPresent()) {
+            User user = existingUser.get();
+            if (user.isEmailVerified()) {
+                throw new EmailAlreadyInUseException("Email already registered");
+            }
+
+            String newToken = UUID.randomUUID().toString();
+            user.setEmailVerificationToken(newToken);
+            user.setEmailTokenExpiresAt(Instant.now().plus(24, ChronoUnit.HOURS));
+            userRepository.save(user);
+            emailService.sendVerificationEmail(user.getEmail(), user.getName(), newToken);
+
+            return new MessageResponse("A new verification email has been sent. Check your inbox.");
         }
 
         String verificationToken = UUID.randomUUID().toString();
@@ -46,7 +59,6 @@ public class AuthServiceImpl {
                 .build();
 
         userRepository.save(user);
-
         emailService.sendVerificationEmail(user.getEmail(), user.getName(), verificationToken);
 
         return new MessageResponse("Registration successful. Check your email to verify your account.");
