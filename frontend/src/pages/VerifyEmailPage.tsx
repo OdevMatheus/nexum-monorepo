@@ -5,20 +5,18 @@ import { authService } from '../services/authService'
 export default function VerifyEmailPage() {
     const [searchParams] = useSearchParams()
     const navigate = useNavigate()
-    const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading')
+    const token = searchParams.get('token')
+    const [status, setStatus] = useState<'loading' | 'success' | 'error'>(
+        token ? 'loading' : 'error'
+    )
 
     useEffect(() => {
-        const token = searchParams.get('token')
-
-        if (!token) {
-            setStatus('error')
-            return
-        }
+        if (!token) return
 
         authService.verifyEmail(token)
             .then(() => setStatus('success'))
             .catch(() => setStatus('error'))
-    }, [searchParams])
+    }, [token])
 
     return (
         <div className="min-h-screen bg-slate-900 flex items-center justify-center px-4">
