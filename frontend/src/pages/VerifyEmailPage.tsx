@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import { authService } from '../services/authService'
+import type { AxiosError } from 'axios'
+import type { ErrorResponse } from '../types/auth'
 
 export default function VerifyEmailPage() {
     const [searchParams] = useSearchParams()
     const navigate = useNavigate()
     const token = searchParams.get('token')
-    const [status, setStatus] = useState<'loading' | 'success' | 'error'>(
+    const [status, setStatus] = useState<'loading' | 'success' | 'error' | 'already-verified'>(
         token ? 'loading' : 'error'
     )
 
@@ -15,7 +17,14 @@ export default function VerifyEmailPage() {
 
         authService.verifyEmail(token)
             .then(() => setStatus('success'))
-            .catch(() => setStatus('error'))
+            .catch((error: AxiosError<ErrorResponse>) => {
+                const message = error.response?.data?.message
+                if (message === 'Invalid or expired verification token') {
+                    setStatus('already-verified')
+                } else {
+                    setStatus('error')
+                }
+            })
     }, [token])
 
     return (
@@ -33,6 +42,20 @@ export default function VerifyEmailPage() {
                         <div className="text-green-400 text-5xl mb-4">✓</div>
                         <h2 className="text-xl font-semibold text-white mb-2">E-mail verificado!</h2>
                         <p className="text-slate-400 text-sm mb-6">Sua conta está ativa. Você já pode fazer login.</p>
+                        <button
+                            onClick={() => navigate('/login')}
+                            className="bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg px-6 py-2.5 text-sm transition"
+                        >
+                            Ir para o login
+                        </button>
+                    </>
+                )}
+
+                {status === 'already-verified' && (
+                    <>
+                        <div className="text-blue-400 text-5xl mb-4">✓</div>
+                        <h2 className="text-xl font-semibold text-white mb-2">E-mail já verificado!</h2>
+                        <p className="text-slate-400 text-sm mb-6">Sua conta já está ativa. Faça login para continuar.</p>
                         <button
                             onClick={() => navigate('/login')}
                             className="bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg px-6 py-2.5 text-sm transition"

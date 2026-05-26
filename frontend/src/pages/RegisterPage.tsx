@@ -1,6 +1,7 @@
 import { useRegister } from '../hooks/useAuth'
 import { useState } from 'react'
 import type { RegisterRequest } from '../types/auth'
+import { getErrorMessage } from '../services/authService'
 
 export default function RegisterPage() {
     const { mutate, isPending, isSuccess, error } = useRegister()
@@ -29,7 +30,7 @@ export default function RegisterPage() {
 
                 {error && (
                     <div className="mb-4 p-3 rounded-lg bg-red-900/30 border border-red-700 text-red-400 text-sm">
-                        Ocorreu um erro. Tente novamente.
+                        {getErrorMessage(error)}
                     </div>
                 )}
 

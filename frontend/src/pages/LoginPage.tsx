@@ -1,6 +1,8 @@
 import { useLogin } from '../hooks/useAuth'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import type { LoginRequest } from '../types/auth'
+import { getErrorMessage } from '../services/authService'
 
 export default function LoginPage() {
     const { mutate, isPending, error } = useLogin()
@@ -9,8 +11,7 @@ export default function LoginPage() {
         password: '',
     })
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault()
+    const handleSubmit = () => {
         mutate(form)
     }
 
@@ -22,11 +23,11 @@ export default function LoginPage() {
 
                 {error && (
                     <div className="mb-4 p-3 rounded-lg bg-red-900/30 border border-red-700 text-red-400 text-sm">
-                        E-mail ou senha inválidos.
+                        {getErrorMessage(error)}
                     </div>
                 )}
 
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="space-y-4">
                     <div>
                         <label className="block text-sm text-slate-300 mb-1">E-mail</label>
                         <input
@@ -35,7 +36,6 @@ export default function LoginPage() {
                             value={form.email}
                             onChange={(e) => setForm({ ...form, email: e.target.value })}
                             className="w-full bg-slate-900 border border-slate-600 text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 transition"
-                            required
                         />
                     </div>
 
@@ -47,24 +47,24 @@ export default function LoginPage() {
                             value={form.password}
                             onChange={(e) => setForm({ ...form, password: e.target.value })}
                             className="w-full bg-slate-900 border border-slate-600 text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 transition"
-                            required
                         />
                     </div>
 
                     <button
-                        type="submit"
+                        type="button"
+                        onClick={handleSubmit}
                         disabled={isPending}
                         className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-medium rounded-lg py-2.5 text-sm transition"
                     >
                         {isPending ? 'Entrando...' : 'Entrar'}
                     </button>
-                </form>
+                </div>
 
                 <p className="text-center text-slate-400 text-sm mt-6">
                     Não tem uma conta?{' '}
-                    <a href="/register" className="text-blue-400 hover:text-blue-300 transition">
+                    <Link to="/register" className="text-blue-400 hover:text-blue-300 transition">
                         Criar conta
-                    </a>
+                    </Link>
                 </p>
             </div>
         </div>

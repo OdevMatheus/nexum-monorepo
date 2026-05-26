@@ -1,4 +1,5 @@
 import axios, { AxiosError } from 'axios'
+import { translateError } from '../Utils/errorMessages.ts'
 import type {
     RegisterRequest,
     LoginRequest,
@@ -7,6 +8,13 @@ import type {
     MessageResponse,
     ErrorResponse,
 } from '../types/auth'
+
+
+export const getErrorMessage = (error: unknown): string => {
+    const axiosError = error as AxiosError<ErrorResponse>
+    const message = axiosError.response?.data?.message
+    return message ? translateError(message) : 'Ocorreu um erro inesperado. Tente novamente.'
+}
 
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:8080',
@@ -27,6 +35,11 @@ api.interceptors.response.use(
     (response) => response,
     async (error: AxiosError<ErrorResponse>) => {
         const original = error.config
+
+        const isAuthRoute = original?.url?.includes('/v1/auth/')
+        if (isAuthRoute) {
+            return Promise.reject(error)
+        }
 
         if (error.response?.status === 401 && original) {
             const refreshToken = localStorage.getItem('refreshToken')
@@ -87,6 +100,7 @@ export const authService = {
         const response = await api.get<MessageResponse>(`/v1/auth/verify-email?token=${token}`)
         return response.data
     },
+
 }
 
 export default api
