@@ -19,10 +19,11 @@ public interface ClientRepository extends JpaRepository<Client, UUID> {
     boolean existsByEmailAndActiveTrueAndIdNot(String email, UUID id);
 
     @Query("""
-        SELECT c FROM Client c
-        WHERE c.active = true
-        AND (:search IS NULL OR LOWER(c.name) LIKE LOWER(CONCAT('%', :search, '%'))
-             OR LOWER(c.email) LIKE LOWER(CONCAT('%', :search, '%')))
-    """)
+    SELECT c FROM Client c
+    WHERE c.active = true
+    AND (:search IS NULL
+         OR LOWER(c.name) LIKE LOWER(CONCAT('%', CAST(:search AS string), '%'))
+         OR LOWER(c.email) LIKE LOWER(CONCAT('%', CAST(:search AS string), '%')))
+""")
     Page<Client> findAllActiveWithSearch(@Param("search") String search, Pageable pageable);
 }

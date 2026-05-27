@@ -15,6 +15,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfigurationSource;
 
+import java.time.Instant;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -36,6 +38,16 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setStatus(401);
+                            response.setContentType("application/json");
+                            response.getWriter().write(
+                                    "{\"status\":401,\"error\":\"Unauthorized\",\"message\":\"Authentication required\",\"timestamp\":\""
+                                            + Instant.now() + "\"}"
+                            );
+                        })
+                )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/v1/auth/**",

@@ -5,6 +5,8 @@ const errorMap: Record<string, string> = {
     'Invalid or expired verification token': 'Link de verificação inválido ou expirado.',
     'Verification token has expired': 'O link de verificação expirou. Solicite um novo cadastro.',
     'A new verification email has been sent. Check your inbox.': 'Um novo e-mail de verificação foi enviado.',
+    'Client not found': 'Cliente não encontrado.',
+    'Email already in use': 'Este e-mail já está em uso por outro cliente ativo.',
 
     'Invalid email address': 'Endereço de e-mail inválido ou inexistente.',
     'Password must contain at least one letter and one number': 'A senha deve conter pelo menos uma letra e um número.',
