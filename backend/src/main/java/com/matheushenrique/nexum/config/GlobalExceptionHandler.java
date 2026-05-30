@@ -20,6 +20,11 @@ public class GlobalExceptionHandler {
             Instant timestamp
     ) {}
 
+    @ExceptionHandler(PlanNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlePlanNotFound(PlanNotFoundException ex) {
+        return build(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
     @ExceptionHandler(ClientNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleClientNotFound(ClientNotFoundException ex) {
         return build(HttpStatus.NOT_FOUND, ex.getMessage());
