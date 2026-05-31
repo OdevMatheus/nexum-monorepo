@@ -5,6 +5,8 @@ import RegisterPage from './pages/RegisterPage'
 import VerifyEmailPage from './pages/VerifyEmailPage'
 import ClientsPage from "./pages/clients/ClientsPage.tsx";
 import ClientDetailPage from "./pages/clients/ClientDetailPage.tsx";
+import PlansPage from "./pages/plans/PlansPage.tsx";
+import PlanDetailPage from "./pages/plans/PlanDetailPage.tsx";
 
 const isAuthenticated = () => !!sessionStorage.getItem('accessToken')
 
@@ -32,6 +34,8 @@ function App() {
             <Route path="*" element={<Navigate to="/" replace />} />
             <Route path="/clients" element={<PrivateRoute><ClientsPage /></PrivateRoute>} />
             <Route path="/clients/:id" element={<PrivateRoute><ClientDetailPage /></PrivateRoute>} />
+            <Route path="/plans" element={<PrivateRoute><PlansPage /></PrivateRoute>} />
+            <Route path="/plans/:id" element={<PrivateRoute><PlanDetailPage /></PrivateRoute>} />
         </Routes>
     )
 }
