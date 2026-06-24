@@ -159,11 +159,15 @@ docker compose up -d
 #### 2. Configurar e Executar o Backend
 Crie um arquivo `.env` na raiz do diretório `backend/` com as seguintes chaves:
 ```env
-JWT_SECRET=sua_chave_secreta_jwt_de_no_minimo_512_bits
+# Deve ser uma chave válida codificada em Base64 padrão com no mínimo 512 bits (64 bytes)
+JWT_SECRET=4/dRdOJPoeRqAJK1KTDXcZCv33ogqEhBYu6izxYr+Ner/tcKpC+E3JElD6KhzkKMOXZ5C3QdXsfeot7agVLB6w==
 RESEND_API_KEY=re_sua_chave_api_do_resend
 RESEND_FROM_EMAIL=onboarding@resend.dev
 APP_BASE_URL=http://localhost:8080
 ```
+
+> ⚠️ **Importante:** O `JWT_SECRET` deve ser uma chave codificada em **Base64 padrão** de no mínimo 512 bits. Ela não pode conter sublinhados (`_`) ou caracteres inválidos para Base64 padrão, do contrário a inicialização falhará no método `Base64.getDecoder()`. Você pode gerar uma chave segura executando:
+> `node -e "console.log(require('crypto').randomBytes(64).toString('base64'))"` ou `openssl rand -base64 64`
 
 Compile e execute o servidor Spring Boot:
 ```powershell
