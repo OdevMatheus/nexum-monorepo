@@ -62,8 +62,10 @@ services:
       - SPRING_DATA_REDIS_HOST=redis
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
       # Secret padrao para testes locias caso .env nao exista
-      - JWT_SECRET=chave_padrao_local_docker_compose_super_segura_de_no_minimo_512_bits
+      - JWT_SECRET=${JWT_SECRET:-4/dRdOJPoeRqAJK1KTDXcZCv33ogqEhBYu6izxYr+Ner/tcKpC+E3JElD6KhzkKMOXZ5C3QdXsfeot7agVLB6w==}
       - APP_BASE_URL=http://localhost:8080
+      - RESEND_API_KEY=${RESEND_API_KEY:-}
+      - RESEND_FROM_EMAIL=${RESEND_FROM_EMAIL:-onboarding@resend.dev}
 
 volumes:
   nexum-pg-data:
