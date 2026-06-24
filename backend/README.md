@@ -55,11 +55,15 @@ The subscription core uses a deterministic state-machine handling transition pha
 ### 1. Environment Configuration
 Create a `.env` file in this directory (`backend/.env`):
 ```env
-JWT_SECRET=your_jwt_secret_key_minimum_512_bits_long
+# Must be a valid standard Base64-encoded string of at least 512 bits (64 bytes)
+JWT_SECRET=4/dRdOJPoeRqAJK1KTDXcZCv33ogqEhBYu6izxYr+Ner/tcKpC+E3JElD6KhzkKMOXZ5C3QdXsfeot7agVLB6w==
 RESEND_API_KEY=re_your_resend_api_key
 RESEND_FROM_EMAIL=onboarding@resend.dev
 APP_BASE_URL=http://localhost:8080
 ```
+
+> ⚠️ **Important:** The `JWT_SECRET` must be a valid standard **Base64-encoded** string of at least 512 bits. It cannot contain underscores `_` or invalid Base64 characters, otherwise the application will fail to start on `Base64.getDecoder()`. You can generate a secure key by running:
+> `node -e "console.log(require('crypto').randomBytes(64).toString('base64'))"` or `openssl rand -base64 64`
 
 ### 2. Compilation and Run
 To compile and start the development server:

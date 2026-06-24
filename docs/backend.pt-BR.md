@@ -55,11 +55,15 @@ O núcleo do faturamento usa uma máquina de estados determinística para lidar 
 ### 1. Configuração do Ambiente
 Crie um arquivo `.env` dentro do diretório `backend/` (`backend/.env`):
 ```env
-JWT_SECRET=your_jwt_secret_key_minimum_512_bits_long
+# Deve ser uma chave válida codificada em Base64 padrão com no mínimo 512 bits (64 bytes)
+JWT_SECRET=4/dRdOJPoeRqAJK1KTDXcZCv33ogqEhBYu6izxYr+Ner/tcKpC+E3JElD6KhzkKMOXZ5C3QdXsfeot7agVLB6w==
 RESEND_API_KEY=re_your_resend_api_key
 RESEND_FROM_EMAIL=onboarding@resend.dev
 APP_BASE_URL=http://localhost:8080
 ```
+
+> ⚠️ **Importante:** O `JWT_SECRET` deve ser uma chave codificada em **Base64 padrão** de no mínimo 512 bits. Ela não pode conter sublinhados (`_`) ou caracteres inválidos para Base64 padrão, do contrário a inicialização falhará no método `Base64.getDecoder()`. Você pode gerar uma chave segura executando:
+> `node -e "console.log(require('crypto').randomBytes(64).toString('base64'))"` ou `openssl rand -base64 64`
 
 ### 2. Compilação e Execução
 Para compilar e iniciar o servidor de desenvolvimento:
